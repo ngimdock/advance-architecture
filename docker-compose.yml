@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: advance_architecture
+      POSTGRES_PASSWORD: advance_architecture
+      POSTGRES_DB: advance_architecture
+    ports:
+      - '5432:5432'

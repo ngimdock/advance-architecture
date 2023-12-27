@@ -8,12 +8,6 @@ import { AlarmEntity } from '../entities/alarm.entity';
 export class InMemoryAlarmRepository implements AlarmRepository {
   private readonly alarms = new Map<string, AlarmEntity>();
 
-  constructor() {
-    this.alarms.set('1', { id: '1', name: 'Left room', severity: 'CRITICAL' });
-    this.alarms.set('2', { id: '2', name: 'Eat food', severity: 'MEDIUM' });
-    this.alarms.set('3', { id: '3', name: 'Sleep', severity: 'LOW' });
-  }
-
   async save(alarm: Alarm): Promise<Alarm> {
     const persistenceModel = AlarmMapper.toPersistence(alarm);
 
