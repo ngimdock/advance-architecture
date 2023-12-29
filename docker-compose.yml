@@ -1,10 +1,16 @@
 version: '3.8'
 services:
-  postgres:
+  write-db:
     image: postgres:15
+    ports:
+      - '5432:5432'
     environment:
       POSTGRES_USER: advance_architecture
       POSTGRES_PASSWORD: advance_architecture
       POSTGRES_DB: advance_architecture
+  read-db:
+    image: mongo:4.4
     ports:
-      - '5432:5432'
+      - '27017:27017'
+    environment:
+      MONGODB_DATABASE: 'vf-read-db'

@@ -1,14 +1,29 @@
 import { Module } from '@nestjs/common';
-import { AlarmRepository } from 'src/alarms/application/ports/alarm.repository';
-import { InMemoryAlarmRepository } from './repositories/orm-alarm.repository';
+import { InMemoryAlarmRepository } from './repositories/in-memory-alarm.repository';
+import { CreateAlarmRepository } from 'src/alarms/application/ports/create-alarm.repository';
+import { FindAlarmsRepository } from 'src/alarms/application/ports/find-alarms.repository';
+import { UpsertMaterializedAlarmRepository } from 'src/alarms/application/ports/upsert-materialized-alarm.repository';
 
 @Module({
   providers: [
+    InMemoryAlarmRepository,
     {
-      provide: AlarmRepository,
-      useClass: InMemoryAlarmRepository,
+      provide: CreateAlarmRepository,
+      useExisting: InMemoryAlarmRepository,
+    },
+    {
+      provide: FindAlarmsRepository,
+      useExisting: InMemoryAlarmRepository,
+    },
+    {
+      provide: UpsertMaterializedAlarmRepository,
+      useExisting: InMemoryAlarmRepository,
     },
   ],
-  exports: [AlarmRepository],
+  exports: [
+    CreateAlarmRepository,
+    FindAlarmsRepository,
+    UpsertMaterializedAlarmRepository,
+  ],
 })
 export class InMemoryAlarmPersistenceModule {}

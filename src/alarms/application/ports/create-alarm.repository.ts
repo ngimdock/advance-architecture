@@ -1,6 +1,5 @@
 import { Alarm } from 'src/alarms/domain/alarm';
 
-export abstract class AlarmRepository {
+export abstract class CreateAlarmRepository {
   abstract save(alarm: Alarm): Promise<Alarm>;
-  abstract findAll(): Promise<Alarm[]>;
 }

@@ -1,11 +1,26 @@
 import { randomUUID } from 'crypto';
 import { Alarm } from '../alarm';
 import { AlarmSeverity } from '../value-objects/alarm-severity';
+import { AlarmItem } from '../alarm-item';
 
 export class AlarmFactory {
-  create(name: string, severity: string) {
-    const id = randomUUID();
+  create(
+    name: string,
+    severity: string,
+    triggeredAt: Date,
+    items: Array<{ name: string; type: string }>,
+  ) {
+    const alarmId = randomUUID();
     const alarmSeverity = new AlarmSeverity(severity as AlarmSeverity['value']);
-    return new Alarm(id, name, alarmSeverity);
+
+    const alarm = new Alarm(alarmId);
+    alarm.severity = alarmSeverity;
+    alarm.name = name;
+    alarm.triggeredAt = triggeredAt;
+    items
+      .map((item) => new AlarmItem(randomUUID(), item.name, item.type))
+      .forEach((item) => alarm.addAlarmItem(item));
+
+    return alarm;
   }
 }
