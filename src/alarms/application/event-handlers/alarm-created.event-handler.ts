@@ -16,7 +16,7 @@ export class AlarmCreatedEventHandler
   async handle(event: AlarmCreatedEvent) {
     this.logger.debug(`Alarm created event: ${JSON.stringify(event)}`);
 
-    console.log({ items: event.alarm.items });
+    console.log({ event });
 
     // We can use a message broker to publish the event went we create the alarm and subscribe to it in the read model
 

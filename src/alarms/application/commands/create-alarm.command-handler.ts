@@ -1,18 +1,15 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { CreateAlarmCommand } from './create-alarm.command';
 import { AlarmFactory } from 'src/alarms/domain/factories/alarm.factory';
 import { Alarm } from 'src/alarms/domain/alarm';
-import { AlarmCreatedEvent } from 'src/alarms/domain/events/alarm-created.event';
-import { CreateAlarmRepository } from '../ports/create-alarm.repository';
 
 @CommandHandler(CreateAlarmCommand)
 export class CreateAlarmCommandHandler
   implements ICommandHandler<CreateAlarmCommand, Alarm>
 {
   constructor(
-    private readonly alarmRepository: CreateAlarmRepository,
     private readonly alarmFactory: AlarmFactory,
-    private readonly eventBus: EventBus,
+    private readonly eventPublisher: EventPublisher,
   ) {}
   async execute(command: CreateAlarmCommand): Promise<Alarm> {
     const alarm = this.alarmFactory.create(
@@ -22,12 +19,11 @@ export class CreateAlarmCommandHandler
       command.items,
     );
 
-    const newAlarm = await this.alarmRepository.save(alarm);
+    // This call the apply() method of the aggragate
+    this.eventPublisher.mergeObjectContext(alarm);
 
-    // This is not yet the best way to dispatch events.
-    // Domain events should be dispatched from the aggregate root, inside the domain layer.
-    this.eventBus.publish(new AlarmCreatedEvent(alarm));
+    alarm.commit();
 
-    return newAlarm;
+    return alarm;
   }
 }
