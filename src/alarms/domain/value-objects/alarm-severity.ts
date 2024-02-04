@@ -4,4 +4,8 @@ export class AlarmSeverity {
   aquals(security: AlarmSeverity) {
     return this.value === security.value;
   }
+
+  toJSON() {
+    return this.value;
+  }
 }
