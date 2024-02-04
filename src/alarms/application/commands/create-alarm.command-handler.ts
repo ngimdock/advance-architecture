@@ -21,7 +21,6 @@ export class CreateAlarmCommandHandler
 
     // This call the apply() method of the aggragate
     this.eventPublisher.mergeObjectContext(alarm);
-
     alarm.commit();
 
     return alarm;
